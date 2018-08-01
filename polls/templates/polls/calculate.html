@@ -1,0 +1,32 @@
+
+
+{% for i in c_raw_set %}
+  <table border>
+    {% for j in i%}
+        <tr><td>{{j.utimestamp}}</td><td>{{j.data}}</td></tr>
+    {% endfor %}
+  </table>
+{% endfor %}
+
+<h1> Concentraciones </h1>
+{% for i in c_set %}
+
+
+                    <p>{{i}}</p>
+
+
+{% endfor %}
+
+
+<h2> Maxima del set de 12 horas </h2>
+{{ c_max }}
+<h2> Minimo del set de 12 horas </h2>
+{{ c_min }}
+
+<h2> Pesos </h2>
+<p>w: {{w}} </p>
+<p>w* {{w_p}} </p>
+<h1>Rangos de fecha y hora </h1>
+{% for i in c_tags %}
+<p>{{i}}</p>
+{% endfor %}
