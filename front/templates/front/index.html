@@ -133,10 +133,27 @@
                     </div>
                 </div>
             </div>
+          </div>
+          <div class="container">
             <div class="row">
                 <div class="col-xs-12 col-sm-12 col-md-12">
                     <div class="single-team">
-                      <img style="width:100%;" class="img-fluid" src="https://maps.googleapis.com/maps/api/staticmap?zoom=15&size=1140x300&maptype=roadmap&markers=color:blue%7Clabel:S%7C-25.323276,-57.6370054&key=AIzaSyA5y-wpemzhM6iw2MpXWV8RuTRGOextXu0"/>
+
+                      <div id="map" style="height:300px;"></div>
+                      <script>
+                        var map;
+                        var ucadicia = {lat: -25.323276, lng: -57.6370054};
+                        function initMap() {
+                          map = new google.maps.Map(document.getElementById('map'), {
+                            center: ucadicia,
+                            zoom: 17
+                          });
+                          var marker = new google.maps.Marker({position: ucadicia, map: map});
+                        }
+                      </script>
+                      <!--<img style="width:100%;"
+                      class="img-fluid"
+                      src="https://maps.googleapis.com/maps/api/staticmap?zoom=15&size=1140x300&maptype=roadmap&markers=color:blue%7Clabel:S%7C-25.323276,-57.6370054&key=AIzaSyA5y-wpemzhM6iw2MpXWV8RuTRGOextXu0"/>-->
                         <!--<div class="team-photo">
                             <img src="images/team-section-1.png" alt="">
                         </div>
@@ -784,6 +801,7 @@
 
     <script src="{% static "js/raphael-2.1.4.min.js" %}"></script>
     <script src="{% static "js/justgage.js" %}"></script>
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyA5y-wpemzhM6iw2MpXWV8RuTRGOextXu0&callback=initMap"  async defer></script>
 
     <script>
     var g = new JustGage({
