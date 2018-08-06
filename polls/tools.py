@@ -8,17 +8,49 @@ def deviceDatetime(socket1):
     info = datetimeb.decode('UTF-8')
     return datetime.strptime(info,"\r\n%m/%d/%Y,%H:%M:%S\r\n")
 
+
+
 def initDeviceConnection():
     HOST = '172.16.5.2'    # The remote host
     PORT = 3602              # The same port as used by the server
     s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-    s.connect((HOST, PORT))
+    try:
+        s.connect((HOST, PORT))
+    except socket.error:
+        return None
     return s
+
+
+
+def startDeviceMeasure(s):
+    s.send('MSTART\r'.encode())
+    start_responseb = s.recv(1024)
+    start_response =  start_responseb.decode('UTF-8')
+    if "OK" in start_response:
+        return True
+    else:
+        if "FAIL" in start_response:
+            return False
+
+
+
+def stopDeviceMeasure(s):
+    s.send('MSTOP\r'.encode())
+    start_responseb = s.recv(1024)
+    start_response =  start_responseb.decode('UTF-8')
+    if "OK" in start_response:
+        return True
+    else:
+        if "FAIL" in start_response:
+            return False
+
+
 
 def getDeviceStatus(socket1):
     socket1.send('MSTATUS\r'.encode())
     statusb = socket1.recv(1024)
     return statusb.decode('UTF-8')
+    # return "Idle"
 
 
 def getDeviceMeasure(socket):

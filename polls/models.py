@@ -58,7 +58,7 @@ class Concentrations(models.Model):
     real_start = models.DateTimeField()
     start = models.DateTimeField()
     final =  models.DateTimeField()
-    sum = models.FloatField()
+    sum = models.FloatField(default=0, blank=True, null=True)
     count = models.IntegerField()
     @property
     def data(self):

@@ -8,7 +8,7 @@ from background_task import background
 from django.shortcuts import redirect
 from django.contrib.admin import AdminSite
 from django.template.response import TemplateResponse
-from .tools import initDeviceConnection,getDeviceStatus,getDeviceMeasure,deviceDatetime,query_12_set_concentrations,nowcast,air_quality_index
+from .tools import initDeviceConnection,getDeviceStatus,getDeviceMeasure,deviceDatetime,query_12_set_concentrations,nowcast,air_quality_index,stopDeviceMeasure,startDeviceMeasure
 from django.urls import include, path
 import time
 from .tasks import notify_user
@@ -92,34 +92,82 @@ class connectionRequestAdmin(admin.ModelAdmin):
         urls = super().get_urls()
         my_urls = [
             path('startrecord/',self.start_record),
-            path('stoprecord/',self.stop_record)
+            path('stoprecord/',self.stop_record),
+            path('stopdevice/',self.stop_device),
+            path('startdevice/',self.start_device)
         ]
         return my_urls + urls
     def start_record(self,request):
         s = initDeviceConnection()
-        start_date = deviceDatetime(s)
 
-        elapsed_time, data, error, alarm = getDeviceMeasure(s)
+        if s is not None:
+            start_date = deviceDatetime(s)
 
+            elapsed_time, data, error, alarm = getDeviceMeasure(s)
 
-        measure = Measurements(
-        author=models.User.objects.get(id=1) ,
-        start_timestamp=start_date,
-        current_timestamp=elapsed_time)
-        measure.save()
+            measure = Measurements(
+            author=models.User.objects.get(id=1) ,
+            start_timestamp=start_date,
+            current_timestamp=elapsed_time)
+            measure.save()
 
-
-
-        task_created = BackgroundTaskModel.objects.count()
-        if not task_created:
-            notify_user(measure.id,repeat=10)
+            task_created = BackgroundTaskModel.objects.count()
+            if not task_created:
+                notify_user(measure.id,repeat=10)
+            else:
+                messages.add_message(request,messages.ERROR, 'Existe un proceso de grabación actualmente. ')
         else:
-            messages.add_message(request,messages.ERROR, 'Existe un proceso de grabación actualmente. ')
+            messages.add_message(request,messages.ERROR, 'No se puede realizar una conexion con el Dusttrak. ')
+
 
         return redirect("admin.index");
 
+
+
+
+
+
     def stop_record(self,request):
         BackgroundTaskModel.objects.all().delete();
+        return redirect('admin.index');
+
+
+
+
+
+    def start_device(self,request):
+        # BackgroundTaskModel.objects.all().delete();
+        s =  initDeviceConnection()
+        if s is not None:
+            if startDeviceMeasure(s) :
+                messages.add_message(request,messages.ERROR, 'El Dusttrak se inicio correctamente. ')
+            else:
+                messages.add_message(request,messages.ERROR, 'No se puede iniciar el dispositivo. ')
+        else:
+            messages.add_message(request,messages.ERROR, 'No se puede realizar una conexion con el Dusttrak. ')
+        return redirect('admin.index');
+
+
+
+
+
+
+
+    def stop_device(self,request):
+
+        s =  initDeviceConnection()
+        if s is not None:
+            if stopDeviceMeasure(s) :
+                messages.add_message(request,messages.ERROR, 'El Dusttrak se detuvo correctamente. ')
+            else:
+                messages.add_message(request,messages.ERROR, 'No se puede detener el dispositivo. ')
+        else:
+            messages.add_message(request,messages.ERROR, 'No se puede realizar una conexion con el Dusttrak. ')
+
+
+
+        # El stop measure debe  a la vez hacer un stop recording
+        # BackgroundTaskModel.objects.all().delete();
         return redirect('admin.index');
 
 
@@ -135,11 +183,11 @@ class connectionRequestAdmin(admin.ModelAdmin):
 
 
 
-
+from django.views.decorators.cache import never_cache
 
 # Register your models here.
 class MyAdminSite(AdminSite):
-
+    
     def index(self, request, extra_context=None):
         """
         Display the main admin index page, which lists all of the installed
@@ -149,14 +197,15 @@ class MyAdminSite(AdminSite):
 
 
         s = initDeviceConnection()
-
+        if s==None :
+            messages.add_message(request,messages.ERROR, 'No se puede realizar una conexion con el Dusttrak. ')
 
         context = dict(
             self.each_context(request),
             title=self.index_title,
             app_list=app_list,
-            device_datetime=deviceDatetime(s),
-            device_status=getDeviceStatus(s),
+            device_datetime =  "Sin Conexion" if s==None else deviceDatetime(s),
+            device_status= "Sin Conexion" if s==None else getDeviceStatus(s),
             record_status=BackgroundTaskModel.objects.all(),
             conf_correction_index =  NumericSettigs.objects.all().filter(name='conf_correction_index').first().value,
             link_stop_device='/admin/polls/history/stopdevice',
