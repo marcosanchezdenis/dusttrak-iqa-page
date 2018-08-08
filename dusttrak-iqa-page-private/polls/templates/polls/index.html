@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>Dashboard - Dusttrak</title>
+
+    <meta name="description" content="Source code generated using layoutit.com">
+    <meta name="author" content="LayoutIt!">
+
+
+
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-WskhaSGFgHYWDcbwN70/dfYBj47jz9qbsMId/iRN3ewGhXQFZCSftd1LZCfmhktB" crossorigin="anonymous">
+    <script src="https://code.jquery.com/jquery-1.12.4.min.js" integrity="sha256-ZosEbRLbNQzLpnKIkEdrPv7lOy9C27hHQ+Xp8a4MxAQ=" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js" integrity="sha384-smHYKdLADwkXOn1EmN1qk/HfnUcbVRZyYmZ4qpPea6sjB/pTJ0euyQp0Mk8ck+5T" crossorigin="anonymous"></script>
+
+  </head>
+  <body>
+
+
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+
+      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+        <span class="navbar-toggler-icon"></span>
+      </button> <a class="navbar-brand" href="#">No Name</a>
+      <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+        <ul class="navbar-nav">
+          <li class="nav-item active">
+             <a class="nav-link" href="/polls">Dashboard <span class="sr-only">(current)</span></a>
+          </li>
+          <li class="nav-item">
+             <a class="nav-link" href="/polls/measuredata">Mediciones</a>
+          </li>
+          <li class="nav-item">
+             <a class="nav-link" href="/polls/calculate">NowCast Calculate</a>
+          </li>
+
+        </ul>
+
+        <ul class="navbar-nav ml-md-auto">
+
+          <li class="nav-item dropdown">
+             <a class="nav-link dropdown-toggle" href="http://example.com" id="navbarDropdownMenuLink" data-toggle="dropdown">[Nombre de usuario]</a>
+            <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdownMenuLink">
+               <a class="dropdown-item" href="#">Cambiar contrasena</a>
+
+
+              <div class="dropdown-divider">
+              </div> <a class="dropdown-item" href="#">Cerrar sesion</a>
+            </div>
+          </li>
+        </ul>
+      </div>
+    </nav>
+    <div class="container">
+    	<div class="row">
+    		<div class="col-md-12">
+
+    			<div class="alert alert-success alert-dismissable">
+
+    				<button type="button" class="close" data-dismiss="alert" aria-hidden="true">
+    					×
+    				</button>
+            {% if messages  %}
+              {% for message in messages %}
+                {{message}}
+
+              {% endfor %}
+            {% endif %}
+
+
+
+    				<h4>	Alert!	</h4>
+            <strong>Warning!</strong> Best check yo self, you're not looking too good.
+            <a href="#" class="alert-link">alert link</a>
+
+    			</div>
+
+
+    			<h3>
+    				Dusttrak
+    			</h3>
+    			<div class="row" style="margin-top:30px;background-color:#eff0ef;padding:20px">
+    				<div class="col-md-6">
+    					<!--<img alt="Bootstrap Image Preview" src="https://www.layoutit.com/img/sports-q-c-140-140-3.jpg" class="rounded-circle">-->
+
+              <div class="card" >
+                <div class="card-body">
+                  <h5 class="card-title">    Estado de Grabacion </h5>
+                  <h6 class="card-subtitle mb-2 text-muted">Card subtitle</h6>
+                  <p class="card-text">{{ operative_task}}</p>
+                  <a href="#" id="start_record" class="card-link">Grabar</a>
+                  <a href="#" id="stop_record" class="card-link">Detener grabación</a>
+                </div>
+              </div>
+
+
+
+
+
+              <div class="card" >
+                <div class="card-body">
+                  <h5 class="card-title">    Estado del Dispositivo </h5>
+                  <h6 class="card-subtitle mb-2 text-muted">Card subtitle</h6>
+                  <p class="card-text">{{ device_status }}</p>
+                  <a href="#" id="device_start" class="card-link">Iniciar</a>
+                  <a href="#" id="device_stop" class="card-link">Detener</a>
+                </div>
+              </div>
+              <!--<div class="card" >
+                <div class="card-body">
+                  <div class="card-title">
+                    <h3 class="text-left text-primary">
+
+                    </h3>
+                <h4 class="text-left text">
+
+                </h4>
+
+                <button type="button"  class="btn disabled btn-lg btn-primary">
+                Iniciar
+                </button>
+
+
+                <button type="button"  class="btn disabled btn-lg btn-primary">
+                  Detener
+                </button>
+              </div>-->
+
+                <script>
+                  $("#start_record").click(function(){
+                      window.location.href='/polls/startrecord';
+                  });
+                  $("#stop_record").click(function(){
+                      window.location.href='/polls/stoprecord';
+                  });
+                  $("#device_start").click(function(){
+                      alert("Pendiente");
+                  });
+                  $("#device_stop").click(function(){
+                      alert("Pendiente");
+                  });
+                </script>
+
+    				</div>
+    				<div class="col-md-6">
+              <div class="card" >
+                <div class="card-body">
+                  <h5 class="card-title">    Configuraciones </h5>
+                    <p class="card-text">
+
+          					 <span class="badge badge-default">Memoria {{ device_available_mem }} </span>
+          					<div class="progress">
+          						<div class="progress-bar w-{{ device_available_mem }}">
+          						</div>
+          					</div>
+          					<ul>
+          						<li class="list-item">
+          							Fecha: {{ device_date  }}
+          						</li>
+                      <li class="list-item">
+          							Hora: {{ device_time  }}
+          						</li>
+          						<li class="list-item">
+          						Memoria: {{ device_available_mem }}
+          						</li>
+
+    						<!--<li class="list-item">
+    							Temperatura: {{ device_temp }}
+    						</li>
+    						<li class="list-item">
+    							Humedad: {{ device_humedad }}t
+    						</li>-->
+
+    					       </ul>
+                  </p>
+                </div>
+              </div>
+    				</div>
+    			</div>
+
+          <div class="row" style="margin-top:30px;background-color:#eff0ef;padding:20px">
+            <div class="col-md-12">
+
+              <div class="card" >
+                <div class="card-body">
+                  <h5 class="card-title"> Historial de acciones </h5>
+                    <p class="card-text">
+
+                  			<table class="table table-hover table-striped">
+                  				<thead>
+                  					<tr>
+                  					<!--	<th>
+                  							#
+                  						</th>-->
+                  						<th>
+                  							Usuario
+                  						</th>
+                  						<th>
+                  							Accion
+                  						</th>
+                  						<th>
+                  							Fecha y hora
+                  						</th>
+                  					</tr>
+                  				</thead>
+                  				<tbody>
+
+                            {% for measureProcess in history_list %}
+                                <tr>
+                                  <td> {{ measureProcess.author }}
+                                  </td>
+                                  <td> {{ measureProcess.action }}
+                                  </td>
+                                  <td> {{ measureProcess.datetime }}
+                                  </td>
+
+                                </tr>
+
+                            {% endfor%}
+
+                  				</tbody>
+                  			</table>
+                  			<nav>
+                  				<ul class="pagination">
+                  					<li class="page-item">
+                  						<a class="page-link" href="#">Previous</a>
+                  					</li>
+                  					<li class="page-item">
+                  						<a class="page-link" href="#">1</a>
+                  					</li>
+                  					<li class="page-item">
+                  						<a class="page-link" href="#">2</a>
+                  					</li>
+                  					<li class="page-item">
+                  						<a class="page-link" href="#">3</a>
+                  					</li>
+                  					<li class="page-item">
+                  						<a class="page-link" href="#">4</a>
+                  					</li>
+                  					<li class="page-item">
+                  						<a class="page-link" href="#">5</a>
+                  					</li>
+                  					<li class="page-item">
+                  						<a class="page-link" href="#">Next</a>
+                  					</li>
+                  				</ul>
+                  			</nav>
+                      </p>
+                    </div>
+                  </div>
+        </div>
+        </div>
+
+    		</div>
+    	</div>
+
+</div>
+
+
+  </body>
+
+</html>

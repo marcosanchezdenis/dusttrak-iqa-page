@@ -1,0 +1,9 @@
+Nowcast :{{ nowcast }}
+Air quality index: {{aqi}}
+Category: {{category}}
+{% for i in partitions %}
+{{i}}
+{% endfor %}
+{% for i in concentrations %}
+{{i}}
+{% endfor %}
